@@ -134,7 +134,7 @@ docker run -d --rm \
     -v ~/redroid-data:/data \
     -p 5555:5555 \
     --name redroid \
-    redroid/redroid:11.0.0_gapps \
+    redroid/redroid:11.0.0_gapps_gp_unlim \
 +    ro.product.brand=google \
 +    ro.product.manufacturer=Google \
 +    ro.product.device=marlin \
