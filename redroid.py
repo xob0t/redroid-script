@@ -2,6 +2,7 @@
 
 import argparse
 from stuffs.gapps import Gapps
+from stuffs.gp_unlim import Gp_unlim
 from stuffs.magisk import Magisk
 from stuffs.ndk import Ndk
 from stuffs.widevine import Widevine
@@ -23,6 +24,10 @@ def main():
                         dest='gapps',
                         help='Install OpenGapps to ReDroid',
                         action='store_true')
+    parser.add_argument('-u', '--install-gp-unlim',
+                    dest='gp_unlim',
+                    help='Install gphoto-unlimited to ReDroid',
+                    action='store_true')
     parser.add_argument('-n', '--install-ndk-translation',
                         dest='ndk',
                         help='Install libndk translation files',
@@ -48,6 +53,10 @@ def main():
         Gapps().install()
         dockerfile = dockerfile + "COPY gapps /\n"
         tags.append("gapps")
+    if args.gp_unlim:
+        Gp_unlim().install()
+        dockerfile = dockerfile + "COPY gp_unlim /\n"
+        tags.append("gp-unlim")
     if args.ndk:
         if args.android in ["11.0.0", "12.0.0", "12.0.0_64only"]:
             arch = helper.host()[0]

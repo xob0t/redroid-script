@@ -50,8 +50,6 @@
      ro.ndk_translation.version=0.2.2
    ```
 
-   
-
    It has 8 tags
 
    1. abing7k/redroid:a11_magisk_arm
@@ -63,13 +61,11 @@
    7. abing7k/redroid:a11_gapps_ndk_amd
    8. abing7k/redroid:a11_ndk_amd
 
-   
-
    If you want connect to this android.You can run scrcpy-web
 
    ```bash
    docker run -itd --privileged --name scrcpy-web -p 8000:8000/tcp emptysuns/scrcpy-web:v0.1
-   
+
    docker exec -it scrcpy-web adb connect your_ip:11101
    ```
 
@@ -79,15 +75,9 @@
 
    Pull up from the bottom of the screen
 
-   
-
    ![](https://image.newbee666.cf/img/202312151950429.png)
 
-   
-
    ![](https://image.newbee666.cf/img/202312151952545.png)
-
-   
 
    # If you want your own image
 
@@ -110,118 +100,134 @@
     -c {docker,podman}, --container {docker,podman}
    ```
 
-
    ## Specify an Android version
 
    Use `-a` or `--android-version` to specify the Android version of the image being pulled. The value can be `8.1.0`, `9.0.0`, `10.0.0`, `11.0.0`, `12.0.0`, `12.0.0_64only` or `13.0.0`. The default is 11.0.0.
 
-   ```bash
 # pull the latest image
-python redroid.py -a 11.0.0
-   ```
 
-   ## Add OpenGapps to ReDroid image
+```bash
+python redroid.py -a 11.0.0
+```
+
+## Add OpenGapps to ReDroid image
 
    <img src="./assets/3.png" style="zoom:50%;" />
 
-   ```bash
+```bash
 python redroid.py -g
-   ```
+```
 
-   ## Add libndk arm translation to ReDroid image
+## Add Google Photos Unlimited to ReDroid image
+Does not install Goolge Photo itself.
+
+   <img src="./assets/5.png" style="zoom:50%;" />
+
+```bash
+python redroid.py -u
+```
+To make it work, these launch parameters must be present
+
+```diff
+docker run -d --rm \
+    --privileged \
+    -v ~/redroid-data:/data \
+    -p 5555:5555 \
+    --name redroid \
+    redroid/redroid:11.0.0_gapps \
++    ro.product.brand=google \
++    ro.product.manufacturer=Google \
++    ro.product.device=marlin \
++    ro.build.product=marlin \
++    ro.product.model="Pixel" \
++    ro.build.fingerprint=google/marlin/marlin:10/QP1A.191005.007.A3/5972272:user/release-keys
+```
+
+
+## Add libndk arm translation to ReDroid image
 
    <img src="./assets/2.png" style="zoom:50%;" />
 
-   libndk_translation from guybrush firmware.
+libndk_translation from guybrush firmware.
 
-   libndk seems to have better performance than libhoudini on AMD.
+libndk seems to have better performance than libhoudini on AMD.
 
-   ```bash
+```bash
 python redroid.py -n
-   ```
+```
 
-   ## Add Magisk to ReDroid image
+## Add Magisk to ReDroid image
 
    <img src="./assets/1.png" style="zoom:50%;" />
 
-   Zygisk and modules like LSPosed should work.
+Zygisk and modules like LSPosed should work.
 
-   
-
-   ```bash
+```bash
 python redroid.py -m
-   ```
+```
 
-   ## Add widevine DRM(L3) to ReDroid image
+## Add widevine DRM(L3) to ReDroid image
 
-   ![](assets/4.png)
+![](assets/4.png)
 
-   ```
+```
 python redroid.py -w
-   ```
+```
 
-   
+## Example
 
-   ## Example
+This command will add Gapps, Magisk, Libndk, Widevine to the ReDroid image at the same time.
 
-   This command will add Gapps, Magisk, Libndk, Widevine to the ReDroid image at the same time.
-
-   ```bash
+```bash
 python redroid.py -a 11.0.0 -gmnw
-   ```
+```
 
-   Then start the docker container.
+Then start the docker container.
 
-   ```bash
+```bash
 docker run -itd --restart=always --privileged \
-  --name a11_1 \
-  -v ~/redroid/redroid01/data:/data \
-  -p 11101:5555 \
-  redroid/redroid:a11_magisk_arm \
-  androidboot.redroid_gpu_mode=guest
-   ```
+--name a11_1 \
+-v ~/redroid/redroid01/data:/data \
+-p 11101:5555 \
+redroid/redroid:a11_magisk_arm \
+androidboot.redroid_gpu_mode=guest
+```
 
-   
+## Troubleshooting
 
-   ## Troubleshooting
+- Magisk installed: N/A
 
-   - Magisk installed: N/A
+  According to some feedback from WayDroid users, changing the kernel may solve this issue. https://t.me/WayDroid/126202
 
-     According to some feedback from WayDroid users, changing the kernel may solve this issue. https://t.me/WayDroid/126202
+- The device isn't Play Protect certified
 
-   - The device isn't Play Protect certified
+  1.  Run below command on host
 
-     1. Run below command on host
+  ```bash
+  adb root
+  adb shell settings get secure android_id
+  ```
 
-     ```bash
-     adb root
-     adb shell settings get secure android_id
-     ```
+  ![](https://image.newbee666.cf/img/202401162356635.png)
 
-     ![](https://image.newbee666.cf/img/202401162356635.png)
+  2.  Grab device id and register on this website: https://www.google.com/android/uncertified/
 
-     2. Grab device id and register on this website: https://www.google.com/android/uncertified/
+- libndk doesn't work
 
-   - libndk doesn't work
+  I only made it work on `redroid/redroid:11.0.0`. Also, turning on Zygisk seems to break libndk for 32 bit apps, but arm64 apps still work.
 
-     I only made it work on `redroid/redroid:11.0.0`. Also, turning on Zygisk seems to break libndk for 32 bit apps, but arm64 apps still work.
+- libhoudini doesn't work
 
-   - libhoudini doesn't work
+  I have no idea. I can't get any version of libhoudini to work on redroid.
 
-     I have no idea. I can't get any version of libhoudini to work on redroid.
+- If you want to install APK, you can use the adb install command.
 
-   - If you want to install APK, you can use the adb install command.
-
-     
-
-     
-
-
-   ## Credits
+## Credits
 
       1. [remote-android](https://github.com/remote-android)
       2. [waydroid_script](https://github.com/casualsnek/waydroid_script)
       3. [Magisk Delta](https://huskydg.github.io/magisk-files/)
+      4. [gphotos-unlimited-zygisk](https://gitlab.com/cuynu/gphotos-unlimited-zygisk)
       4. [vendor_intel_proprietary_houdini](https://github.com/supremegamers/vendor_intel_proprietary_houdini)
 
 # 创造不易，感谢支持
