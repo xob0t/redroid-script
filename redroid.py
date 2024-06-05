@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
 import argparse
+import subprocess
 from stuffs.gapps import Gapps
 from stuffs.gp_unlim import Gp_unlim
 from stuffs.magisk import Magisk
 from stuffs.ndk import Ndk
 from stuffs.widevine import Widevine
 import tools.helper as helper
-import subprocess
 
 
 def main():
@@ -76,7 +76,7 @@ def main():
         dockerfile = dockerfile+"COPY widevine /\n"
         tags.append("widevine")
     print("\nDockerfile\n"+dockerfile)
-    with open("./Dockerfile", "w") as f:
+    with open("./Dockerfile", "w", encoding="utf-8") as f:
         f.write(dockerfile)
     new_image_name = "redroid/redroid:"+"_".join(tags)
     subprocess.run([args.container, "build", "-t", new_image_name, "."])
