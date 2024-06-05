@@ -224,11 +224,11 @@ androidboot.redroid_gpu_mode=guest
 
 ## Credits
 
-      1. [remote-android](https://github.com/remote-android)
-      2. [waydroid_script](https://github.com/casualsnek/waydroid_script)
-      3. [Magisk Delta](https://huskydg.github.io/magisk-files/)
-      4. [gphotos-unlimited-zygisk](https://gitlab.com/cuynu/gphotos-unlimited-zygisk)
-      4. [vendor_intel_proprietary_houdini](https://github.com/supremegamers/vendor_intel_proprietary_houdini)
+   * [remote-android](https://github.com/remote-android)
+   * [waydroid_script](https://github.com/casualsnek/waydroid_script)
+   * [Magisk Delta](https://huskydg.github.io/magisk-files/)
+   * [gphotos-unlimited-zygisk](https://gitlab.com/cuynu/gphotos-unlimited-zygisk)
+   * [vendor_intel_proprietary_houdini](https://github.com/supremegamers/vendor_intel_proprietary_houdini)
 
 # 创造不易，感谢支持
 
